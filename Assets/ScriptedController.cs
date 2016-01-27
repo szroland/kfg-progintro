@@ -64,6 +64,7 @@ public class ScriptedController : MonoBehaviour {
                 Vector3 t = target + tavolsag * dir;
                 SetTarget(t.x, t.y, t.z);                                
             };
+            isDone = delegate { return IsClose(); };
         }
         _waitHandle.WaitOne();
     }
