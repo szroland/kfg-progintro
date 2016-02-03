@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 457202}
   - 135: {fileID: 13582234}
   - 114: {fileID: 11441390}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Kimenet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 496254}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Gyar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - 33: {fileID: 3301548}
   - 65: {fileID: 6596836}
   - 23: {fileID: 2384692}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Talapzat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - 33: {fileID: 3365066}
   - 23: {fileID: 2300234}
   - 65: {fileID: 6554088}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Felso resz
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gyartmany:
   - {fileID: 197792, guid: 342a01aa3885c8e409a67a885ea8ebfd, type: 2}
-  gyartmanyTag: 
   veletlenSorrend: 0
 --- !u!135 &13582234
 SphereCollider:
@@ -242,7 +241,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 150850}

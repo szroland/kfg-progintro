@@ -28,6 +28,7 @@ public class ScriptedController : MonoBehaviour {
     IsDone isDone;
 
     private ParticleSystem engine;
+    private Rigidbody lifting;
 
     private System.Threading.Thread m_Thread = null;
     EventWaitHandle _waitHandle = new AutoResetEvent(false);
@@ -52,6 +53,105 @@ public class ScriptedController : MonoBehaviour {
         Varakozik(2);
 
         Felirat("Mit csináljak?");
+    }
+
+    public void Elenged()
+    {        
+        lock (this)
+        {
+                execute = delegate
+                {
+                    if (lifting != null)
+                    {
+                        lifting.transform.parent = null;
+                        lifting.transform.rotation = Quaternion.identity;
+                        lifting.velocity = Vector3.zero;
+                        lifting.angularVelocity = Vector3.zero;
+                        lifting.isKinematic = false;
+                    }
+                };
+        }
+        _waitHandle.WaitOne();
+    }
+
+
+    public bool Felszed(bool changeTag = false)
+    { 
+        lock (this)
+        {
+            float targetY = 0.0f;
+            lifting = null;
+
+            execute = delegate
+            {
+                Ray ray = new Ray(transform.position, -1 * transform.up);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    //Debug.Log("Hit something", hit.rigidbody);
+                    if (hit.rigidbody)
+                    {
+                        lifting = hit.rigidbody;
+                        targetY = this.transform.position.y - 0.8f;
+
+                        lifting.transform.parent = this.transform;
+
+                        if (changeTag)
+                        {
+                            lifting.gameObject.tag = tag;
+                        }
+                    }
+                }
+            };
+            isDone = delegate
+            {
+                if (lifting == null)
+                    return true;
+
+                if (lifting.position.y > targetY)
+                {
+                    lifting.isKinematic = true;
+                    lifting.velocity = Vector3.zero;
+                    lifting.angularVelocity = Vector3.zero;
+                    lifting.transform.position = transform.position + new Vector3(0, -0.8f, 0);
+                    lifting.transform.rotation = Quaternion.identity;
+                    return true;
+
+                }
+                else
+                {
+                    lifting.AddForce(0, 50, 0, ForceMode.Acceleration);
+                    return false;
+                }
+
+            };
+        }
+        _waitHandle.WaitOne();
+        return lifting != null;
+    }
+
+    public GameObject[] Keres(string tag)
+    {
+        GameObject[] result = null;
+        lock (this)
+        {
+            execute = delegate
+            {
+                result = GameObject.FindGameObjectsWithTag(tag);
+                //Debug.Log("Keres: " + result);
+            };
+        }
+        _waitHandle.WaitOne();
+        return result;
+    }
+
+    public GameObject KeresEgy(string tag)
+    {
+        GameObject[] kockak = Keres(tag);
+        if (kockak == null || kockak.Length == 0)
+            return null;
+        return kockak[0];
+
     }
 
     public void Elore(float tavolsag)
@@ -113,14 +213,26 @@ public class ScriptedController : MonoBehaviour {
         _waitHandle.WaitOne();
     }
 
-    public void Elmozdul(float x, float y, float z)
+    public void Elmozdul(float deltaX, float deltaY, float deltaZ)
     {
         lock (this)
         {
-            execute = delegate { SetTarget(target.x+x, target.y+y, target.z+z); };
+            execute = delegate { SetTarget(target.x+ deltaX, target.y+ deltaY, target.z+ deltaZ); };
             isDone = delegate { return IsClose(); };
         }
         _waitHandle.WaitOne();
+
+    }
+
+    public void Menj(GameObject o, float deltaX, float deltaY, float deltaZ)
+    {
+        lock (this)
+        {
+            execute = delegate { SetTarget(o.transform.position.x + deltaX, o.transform.position.y + deltaY, o.transform.position.z + deltaZ); };
+            isDone = delegate { return IsClose(); };
+        }
+        _waitHandle.WaitOne();
+
 
     }
 

@@ -6,6 +6,7 @@ public class Gyar : MonoBehaviour {
 
     public GameObject[] gyartmany;
     public bool veletlenSorrend;
+    public string beallitandoTag;
 
     private int utolso = 0;
 
@@ -33,8 +34,8 @@ public class Gyar : MonoBehaviour {
                 utolso = (utolso + 1) % gyartmany.Length;
 
                 GameObject instance = Instantiate(gyartmany[index], transform.position, Quaternion.identity) as GameObject;
-                if (tag != null && tag != "Untagged")
-                    instance.tag = tag;
+                if (beallitandoTag != null && beallitandoTag != "Untagged" && beallitandoTag.Trim() != "")
+                    instance.tag = beallitandoTag;
             }
 
         }
