@@ -65,7 +65,7 @@ public class ScriptedController : MonoBehaviour {
         _waitHandle.WaitOne();
     }
 
-    public void Elenged()
+    public void Elenged(float kezdetiSebesseg = 0)
     {        
         lock (this)
         {
@@ -75,7 +75,7 @@ public class ScriptedController : MonoBehaviour {
                     {
                         lifting.transform.parent = null;
                         lifting.transform.rotation = Quaternion.identity;
-                        lifting.velocity = Vector3.zero;
+                        lifting.velocity = kezdetiSebesseg * transform.forward;
                         lifting.angularVelocity = Vector3.zero;
                         lifting.isKinematic = false;
                     }
@@ -118,7 +118,7 @@ public class ScriptedController : MonoBehaviour {
                 if (lifting == null)
                     return true;
 
-                if (lifting.position.y > targetY)
+                if (lifting.position.y > targetY || lifting.velocity.magnitude < 0.01f)
                 {
                     lifting.isKinematic = true;
                     lifting.velocity = Vector3.zero;
@@ -139,6 +139,21 @@ public class ScriptedController : MonoBehaviour {
         _waitHandle.WaitOne();
         return lifting != null;
     }
+
+    public void Fordul(GameObject cel)
+    {
+        lock (this)
+        {
+            execute = delegate
+            {
+                Vector3 c = cel.transform.position;
+                c.y = transform.position.y;
+                transform.LookAt(c);
+            };
+        }
+        _waitHandle.WaitOne();
+    }
+ 
 
     public GameObject[] Keres(string tag)
     {
