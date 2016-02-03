@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class Gyar : MonoBehaviour {
 
     public GameObject[] gyartmany;
-    public string gyartmanyTag;
     public bool veletlenSorrend;
 
     private int utolso = 0;
@@ -34,7 +33,7 @@ public class Gyar : MonoBehaviour {
                 utolso = (utolso + 1) % gyartmany.Length;
 
                 GameObject instance = Instantiate(gyartmany[index], transform.position, Quaternion.identity) as GameObject;
-                if (gyartmanyTag != null && gyartmanyTag.Trim() != "")
+                if (tag != null && tag != "Untagged")
                     instance.tag = tag;
             }
 
