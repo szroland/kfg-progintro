@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System;
 using System.Threading;
 
-delegate void Execute();
-delegate bool IsDone();
+public delegate void Execute();
+public delegate bool IsDone();
 
 public class ScriptedController : MonoBehaviour {
     private Vector3 target;
@@ -53,6 +53,16 @@ public class ScriptedController : MonoBehaviour {
         Varakozik(2);
 
         Felirat("Mit csináljak?");
+    }
+
+    public void Vegrehajt(Execute parancs, IsDone fixedUpdateFeltetel = null)
+    {
+        lock(this)
+        {
+            execute = parancs;
+            isDone = fixedUpdateFeltetel;
+        }
+        _waitHandle.WaitOne();
     }
 
     public void Elenged()
