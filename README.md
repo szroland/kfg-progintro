@@ -1,5 +1,55 @@
 # Info szakkör
 
+## 2016.02.03 
+
+### Változók, típusok, tömbök
+
+### Új metódusok a ```ScriptedController``` osztályban
+```csharp
+
+//Megkeresi és visszaadja az adott tag-gel rendelkező objektumokat
+GameObject[] Keres(string tag);
+
+//Megkeresi és visszaadja az adott tag-gel rendelkező objektumok közül az elsőt
+GameObject KeresEgy(string tag);
+
+//Felszedi az alattunk talált objektumot, ha changeTag igaz, átállítja a tag-jét
+Felszed(bool changeTag = false);    
+
+//Elengedi a korábban felszedett objektumot, megadott kezdeti sebességgel (előre)
+Elenged(float kezdetiSebesseg = 0);
+
+//A megadott cél objektum irányába fordul
+Fordul(GameObject cel);
+
+//Menjen a megadot cel objektum helyéhez képest megadott pozícióra (deltaX, deltaY, deltaZ eltéréssel)
+Menj(GameObject cel, float deltaX, float deltaY, float deltaZ);
+
+//tetszőleges parancs végrehajtása a fő Unity szálon (delegate {})
+//majd fixedUpdateFeltetel hívása addig, amíg true-val nem tér vissza (opcionális)
+Vegrehajt(Execute parancs, IsDone fixedUpdateFeltetel = null);
+```
+
+### Új prefab-ek:
+
+- Gyár: Megadott típusú prefab-eket példányosít, ha üres a lerakó rész (pl. elvittük a korábban gyártott elemet). Több prefab is megadható, akkor ezeket sorban egymásután, vagy véletlenszerűen gyártja (Veletlen Sorrend beállítástól függően). Tag-et is tud állítani a legyártott objektumokra, a BeallitandoTag beállításban lehet ezt megadni.
+
+- Cél: Ledobási célterület, a beleeső objektumokat számolja és eltünteti
+
+### Szállító: szállítsunk a Gyárból objektumokat a Célba.
+
+### Ne vigyük az objektumot egészen a célig, dobjuk be a célba (haladó: számoljuk ki a jó dobáshoz szükséges kezdeti sebességet a távolság függényében)
+
+### Építsünk falat az egyik repülővel. Másikkal romboljuk le. Romboljuk le úgy, hogy nekidobunk valamit.
+
+### Több célterület: a gyár termeljen több féle elemet. Mindegyiket másik, a neki megfelelő célterületre vigyük.
+
+### Haladó: csináljunk bombát, ami adott becsapódási sebesség fölött felrobban és erőhatást fejt ki a környezetében.
+Környék objektumai: [Physics.OverlapSphere](http://docs.unity3d.com/ScriptReference/Physics.OverlapSphere.html)
+Robbanás erőhatásai: [Rigidbody.AddExplosionForce](http://docs.unity3d.com/ScriptReference/Rigidbody.AddExplosionForce.html)
+
+### Haladó: a robbanás helyén legyen vizuális robbanás effect (ParticleSystem a standard assetsben)
+
 ## C# bevezetés
 
 ### Pálya
@@ -17,16 +67,29 @@ Nyissuk meg a fájlt és nézzük meg a kódot. Objektum elnevezés, adattagok, 
 
 Öröklött metódusok a vezérléshez:
 
-- Varakozik(int masodperc)
-- Motor(bool be)
-- Felirat(string szoveg)
+```csharp
+//Adott idig várakozik
+Varakozik(float masodperc);
 
-- Elmozdul(float x, float y, float z)
-- Fordul(float szog)
-- Elore(float tavolsag)
-- Menj(float x, float y, float z)
+//Motor ki/be kapcsolása
+Motor(bool be);
 
-- Kidob(GameObject prefab)
+//Felirat beállítása adott szövegre
+Felirat(string szoveg);
+
+//Relatív elmozdulás a jelenlegi pozícióból
+Elmozdul(float deltaX, float deltaY, float deltaZ);
+//Relatív elfordulás a jelenlegi pozícióban
+Fordul(float szog);
+//Relatív elmozdulás adott távolságra abba az irányba, amerre nézünk (Transform.forward)
+Elore(float tavolsag);
+
+//Mozgás a megadott abszolút koordinátákra
+Menj(float x, float y, float z);
+
+//Megadott prefab-et példányosítja a jelenlegi pozíció alatt
+Kidob(GameObject prefab);
+```
 
 ### Referencia más objektumokra
 
@@ -62,8 +125,6 @@ Nézzük meg a ```ScriptedController```-t. Thread-ek, thread-ek közötti kommun
 ### Haladó (Dinamikus rendszer szabályozása)
 
 A repülést egy egyszerű PD szabályozó vezérli a ```target``` bemenettel. PD szabályozó, arányos és differenciáló tag szerepe, paraméterválasztás jelentősége (beállási idő, túllengés).
-
-
 
 
 
