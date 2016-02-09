@@ -28,7 +28,9 @@ public class Piramis : MonoBehaviour {
         for (int i = 0; i < hossz; i++)
         {
             Vector3 pos = new Vector3(x + i * dx, h, z + i * dz);
-            Instantiate(epitoElem, transform.position + pos, Quaternion.identity);
+            GameObject instance = (GameObject) Instantiate(epitoElem, transform.position + pos, Quaternion.identity);
+            
+            instance.transform.parent = transform;
         }
     }
 
